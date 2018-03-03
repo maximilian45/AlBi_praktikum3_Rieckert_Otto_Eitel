@@ -66,23 +66,157 @@ public class PhyloTree {
 		return output;
 	}
 	
+	public static int[] matrixMin(ArrayList<ArrayList<Integer>> matrix){
+		int[] output = new int[2];
+		int min = 99999999;
+		for(int i=0; i< matrix.size();i++){
+			ArrayList<Integer> temp = matrix.get(i);
+			for(int j= 0; j< temp.size();j++){
+				if(temp.get(j)<min){
+					min = temp.get(j);
+					output[0] = i;
+					output[1] = j;
+				}
+			}
+		}
+		
+		return output;
+	}
+	
+	public static ArrayList<ArrayList<Integer>> calcDist(ArrayList<ArrayList<Integer>> oldMatrix, ArrayList<ArrayList<Integer>> matrix, int[] matMin,ArrayList<Integer> clusterCount,ArrayList<Integer> clusterCountNew){
+		ArrayList<ArrayList<Integer>> newMatrix = matrix;// new ArrayList<ArrayList<Integer>>();
+		int delZeile = matMin[0]; //Zeilenindex der zu löschenden Zeile
+		int delSpalte = matMin[1];// Index der zu löschenden Spalte
+		for(int i = 0; i < oldMatrix.size();i++){
+			if(i!=delZeile && i!=delSpalte){
+			//N erster unterknoten *
+		//	clusterCount[matMin[0]]* (oldMatrix.get(matMin[0]).get(i))
+			}
+		}
+		
+		return newMatrix;
+	}
+	
+	
 	public static void buildTree() throws IOException{
 		ArrayList<ArrayList<String>> input = einLesen();
+		ArrayList<String> header = input.get(0);
+		ArrayList<Integer> clusterCount = new ArrayList<Integer>(); // Liste zum Merken wie viele Unterknoten jeder Knoten hat
+		for(int i = 0; i<header.size();i++){
+			clusterCount.add(1);
+		}
 		String tree = "";
 		
 		//Erstellen eines temporären Testmatrix
-		int matrixZeilen = 6;
+		int matrixZeilen = 5;
 		int matrixSpalten = 6;
-		int[][] matrix = new int[matrixZeilen][matrixSpalten];
+		ArrayList<ArrayList<Integer>> matrix = new ArrayList<ArrayList<Integer>>();
 		Random random = new Random();
 		int min =0;
 		int max = 10;
+		 
 		for(int i = 0; i<matrixZeilen; i++){
+			ArrayList<Integer> temp = new ArrayList<Integer>();
 			for(int j = 0; j<matrixSpalten; j++){
 				int rand = random.nextInt(max-min+1)+min;
-				matrix[i][j] = rand;
+				temp.add(rand);
 			}
+			matrix.add(temp);
 		}
+		
+		System.out.println(matrix.size());
+		for(int i = 0;i< matrix.size();i++){
+			System.out.println(matrix.get(i));
+		}
+		//Beginn UPGMA
+		
+		
+		/*
+		int[] matMin = new int[2];
+		matMin = matrixMin(matrix);
+		boolean del = false;
+		int k = 0;
+		int delZeile = matMin[0]; //Zeilenindex der zu löschenden Zeile
+		int delSpalte = matMin[1];// Index der zu löschenden Spalte
+		//Erstes Löschen einer Zeile und einer Spalte
+		for(int i = 0; i <matrix.size();i++){
+			if(i == delZeile){ // Entfernen der ersten zu löschenden Zeile
+				matrix.remove(i);
+				del = true;
+			}else{
+				if(i== delSpalte){ // Löschend der zweiten zuz  löschenden Zeile
+				matrix.remove(i);
+				del = true;
+				}else{
+					
+			if(del == true){ // Absichern, dass temp nicht auf den Index einer gelöschten zeile zugreift (Zeile 138)
+				k = i-1;
+			}else{
+				k = i;
+			}		
+			ArrayList<Integer> temp = matrix.get(k);
+			temp.set(delZeile, null);
+			temp.set(delSpalte, null);
+			temp.removeAll(Collections.singleton(null));
+			matrix.set(i, temp);
+			del = false;
+		}}}*/
+		
+		
+		//Reverser Ansatz! Da das removen mir den index kaputt macht. UND ER WORKT!!!!!!
+		int[] matMin = new int[2];
+		matMin = matrixMin(matrix);
+		int delZeile = matMin[0]; //Zeilenindex der zu löschenden Zeile
+		int delSpalte = matMin[1];// Index der zu löschenden Spalte
+		ArrayList<ArrayList<Integer>> oldMatrix = matrix; // Merken der unmodifizierten matrix für die Distanzberechnung
+		//Erstes Löschen einer Zeile und einer Spalte
+		for(int i = (matrix.size() - 1); i >=0;i--){
+			if(i == delZeile){ // Entfernen der ersten zu löschenden Zeile
+				matrix.remove(i);
+			}else{
+				if(i== delSpalte){ // Löschend der zweiten zuz  löschenden Zeile
+				matrix.remove(i);
+				}else{		
+			ArrayList<Integer> temp = matrix.get(i);
+			temp.set(delZeile, null);
+			temp.set(delSpalte, null);
+			temp.removeAll(Collections.singleton(null));
+			matrix.set(i, temp);
+		}
+		}
+		}
+		//Modifizieren der Clustercount liste um sich zu merken dass aus zwei Knoten ein Knoten mit der Summe ihrer Unterknotenwerte sind (alte wird erstmal behalten für distanz berechnung)
+		// In der letzten Stelle von clusterCountNew steht dann der neue Knotenwert, genauso wie in header an letzter stelle der header für den neuen Knoten steht.
+		ArrayList<Integer> clusterCountNew = clusterCount;
+		clusterCountNew.add( (clusterCount.get(delZeile) + clusterCount.get(delSpalte)));
+		clusterCountNew.set(delZeile, null);
+		clusterCountNew.set(delSpalte, null);
+		clusterCountNew.removeAll(Collections.singleton(null));
+		//clusterCount = clusterCount2;
+		//Gleiche Modifikation für die header Liste
+		header.add( header.get(delZeile) + "+" + header.get(delSpalte) );
+		header.set(delZeile, null);
+		header.set(delSpalte, null);
+		header.removeAll(Collections.singleton(null));
+		
+	//	calcDist(oldMatrix,matrix,matMin,clusterCount,clusterCountNew);
+		
+		
+		System.out.println("Matrixminimum");
+		System.out.println("Matrixminimum Zeile 1= "+ matMin[0]);
+		System.out.println("Matrixminimum Zeile 2 = "+ matMin[1]);
+		System.out.println("Matrixminimum Spalte 1= "+ matMin[0]);
+		System.out.println("Matrixminimum Spalte 2 = "+ matMin[1]);
+		
+		
+		for(int i = 0;i< matrix.size();i++){
+			System.out.println(matrix.get(i));
+		}
+		
+		
+		
+		
+		/*
 		System.out.println("Matrixlänge " + matrix.length);
 		for(int i = 0; i<6; i++){
 			for(int j = 0; j<6; j++){
@@ -122,7 +256,11 @@ public class PhyloTree {
 			}
 		}
 		
-		System.out.println("matmin!! "+"x= "+delZeile+"y= "+delSpalte +" " + matrix[delZeile][delSpalte]);
+		
+		*/
+		
+		
+		/*	System.out.println("matmin!! "+"x= "+delZeile+"y= "+delSpalte +" " + matrix[delZeile][delSpalte]);
 		
 		for(int i = 0; i<5; i++){
 			for(int j = 0; j<5; j++){
@@ -130,7 +268,7 @@ public class PhyloTree {
 			}
 		}
 		
-	/*	for(int i = 0; i<6; i++){
+		for(int i = 0; i<6; i++){
 			for(int j = 0; j<6; j++){
 				System.out.println("x= "+i+"y="+j +" "+matrix[i][j]);
 			}
