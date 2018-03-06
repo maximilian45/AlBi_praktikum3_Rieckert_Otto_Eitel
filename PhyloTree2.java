@@ -75,12 +75,38 @@ public class PhyloTree2 {
 		return distance;
 	}
 
+	public static float[][] distance2(ArrayList<String> sequences){
+		int k = sequences.size();
+		int l = sequences.get(0).length();
+		float[][] distance = new float[k][k];
+		
+		for(int i = 0; i < k; i++) {
+			String seq1 = sequences.get(i);
+			for(int j = i+1; j < k; j++) {
+				String seq2 = sequences.get(j);
+				if(seq1.equals(seq2)) {
+					distance[i][j] = distance[j][i] = 0;
+				} else {
+					float p = 0;
+					for(int m = 0; m < l; m++) {
+						if(seq1.charAt(m) != seq2.charAt(m)) {
+							p += 1;
+						}
+					}
+					distance[i][j] = distance[j][i] = (float)(-0.75*Math.log(1-((4/3)*(p/l))));
+				}
+			}
+		}		
+		return distance;
+	}
+
+	
 	public static int[] matrixMin(float[][] matrix){
 		int[] output = new int[2];
 		float min = 9999999;
 		for(int i = 0;i<matrix.length;i++){
-			for(int j = 0; j <matrix[i].length;j++){
-				if(matrix[i][j] != 0 && matrix[i][j] < min){
+			for(int j = i+1; j <matrix[i].length;j++){
+				if(matrix[i][j] < min){
 					min = matrix[i][j];
 					output[0] = i;
 					output[1] = j;
@@ -92,7 +118,7 @@ public class PhyloTree2 {
 	}
 	
 	
-	public static void buildTree() throws IOException{
+	public static void buildTree(int x) throws IOException{
 		ArrayList<ArrayList<String>> input = einLesen();
 	//	Map<String,String> knoten = new HashMap<String,String>();
 		ArrayList<String> seq = input.get(1);
@@ -102,6 +128,9 @@ public class PhyloTree2 {
 	//	seq.add("ATTGCCGTTT");
 	//	seq.add("TTCGCTGTTT");
 		float[][] dist = distance(seq);
+		if(x==2){
+		dist = distance2(seq);
+		}
 		String tree = "";
 		BufferedWriter writer = new BufferedWriter(new FileWriter("PhyloTree.tree"));
 
@@ -143,6 +172,7 @@ public class PhyloTree2 {
 				}
 			}
 			String neuerKnoten = seq.get(matMin[0]) + " " + seq.get(matMin[1]);
+			header.add(neuerKnoten);
 			//Erstellen der Kantenlänge für unseren neuen Knoten
 			kantenlängen.put(neuerKnoten  ,5*(kantenlängen.get(seq.get(matMin[0])) + kantenlängen.get(seq.get(matMin[1]))+ dist[matMin[0]][matMin[1]]) );
 			
@@ -202,7 +232,8 @@ public class PhyloTree2 {
 				
 	}
 	public static void main(String[] args) throws IOException{
-		buildTree();
+		buildTree(1);
+		buildTree(2);
 	}
 	
 }
