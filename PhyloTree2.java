@@ -123,6 +123,7 @@ public class PhyloTree2 {
 	//	Map<String,String> knoten = new HashMap<String,String>();
 		ArrayList<String> seq = input.get(1);
 		ArrayList<String> header = input.get(0);
+		System.out.println(header);
 	//	seq.add("ATTTGCGGTA");
 	//	seq.add("ATCTGCGATA");
 	//	seq.add("ATTGCCGTTT");
@@ -134,10 +135,10 @@ public class PhyloTree2 {
 		String tree = "";
 		BufferedWriter writer = new BufferedWriter(new FileWriter("PhyloTree.tree"));
 
-		Map<String,Float> kantenlängen = new HashMap<String,Float>();
+		Map<String,Float> kantenlaengen = new HashMap<String,Float>();
 		for(int i= 0; i< seq.size();i++){
 			//knoten.put((input.get(0).get(i)), (input.get(1).get(i)));
-			kantenlängen.put((seq.get(i)),(float)0.0);
+			kantenlaengen.put((seq.get(i)),(float)0.0);
 		}
 		for(int i = 0;i<dist.length;i++){
 			System.out.print("ZEILE " + i +" ");
@@ -153,6 +154,7 @@ public class PhyloTree2 {
 		writer.write("TREE TREE1 = \r\n");
 
 		while(seq.size()>=2){
+			System.out.println(header);
 			int[] matMin = matrixMin(dist);
 			//löschen der Zwei verschmolzenen Knoten sowohl aus der maatrix 
 			float[][] distMod = new float[seq.size()-2][seq.size()-2];
@@ -172,9 +174,12 @@ public class PhyloTree2 {
 				}
 			}
 			String neuerKnoten = seq.get(matMin[0]) + " " + seq.get(matMin[1]);
-			header.add(neuerKnoten);
+			//String neuerHeader = header.get(matMin[0]) +"+" + header.get(matMin[1]);
+			//header.add(neuerHeader);
 			//Erstellen der Kantenlänge für unseren neuen Knoten
-			kantenlängen.put(neuerKnoten  ,5*(kantenlängen.get(seq.get(matMin[0])) + kantenlängen.get(seq.get(matMin[1]))+ dist[matMin[0]][matMin[1]]) );
+			kantenlaengen.put(neuerKnoten  ,5*(kantenlaengen.get(seq.get(matMin[0])) + kantenlaengen.get(seq.get(matMin[1]))+ dist[matMin[0]][matMin[1]]) );
+
+			tree = "(" + "(" + "SARS" + "[&found_in_country= " + header.get(matMin[0]) +"]" + "[&kantenlaenge" + kantenlaengen.get(header.get(matMin[0])) + "]," +"SARS" + "[&found_in_country" + header.get(matMin[1]) +"]" + "[&kantenlaenge" + kantenlaengen.get(header.get(matMin[1])) + "]" + tree +")";
 			
 			//als auch aus der knotenliste seq
 
@@ -182,7 +187,12 @@ public class PhyloTree2 {
 			seq.set(matMin[1], null);
 			seq.removeAll(Collections.singleton(null));
 			
-			//Einfügen der Kantenlängen in metadaten des Baumes nach dem schema von neuerknoten zu matmin[0] kantenläangen[neuerknoten] -klänge[matMin[0]]
+			//header.set(matMin[0], null);
+			//header.set(matMin[1], null);
+			//header.removeAll(Collections.singleton(null));
+			
+			
+			//Einfügen der kantenlaengen in metadaten des Baumes nach dem schema von neuerknoten zu matmin[0] kantenläangen[neuerknoten] -klänge[matMin[0]]
 			// und neuerknoten zu matMin[1] kantenläangen[neuerknoten] -klänge[matMin[1]]
 			
 			float[] neueZeile = new float[distMod.length +1];
