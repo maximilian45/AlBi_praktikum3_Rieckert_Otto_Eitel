@@ -1,0 +1,7 @@
+#NEXUS
+
+BEGIN TREES;
+TREE TREE1 = 
+(SARS1[&found_in_country = 'China'][&kantenlength = '11'],SARS2[&found_in_country = 'Spain'][&kantenlength = '11'])
+;
+END;
