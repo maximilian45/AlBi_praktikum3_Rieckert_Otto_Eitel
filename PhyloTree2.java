@@ -11,42 +11,40 @@ public class PhyloTree2 {
 	public static ArrayList<ArrayList<String>> einLesen() throws IOException{
 		ArrayList<String> outputSeq = new ArrayList<String>();
 		ArrayList<String> outputHeader = new ArrayList<String>();
-		ArrayList<String> input = new ArrayList<String>();
-		input.add("C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/file1.fasta");
-		input.add("C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/file2.fasta");
-		input.add("C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/file3.fasta");
-		input.add("C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/file4.fasta");
-		input.add("C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/file5.fasta");
-		input.add("C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/file6.fasta");
-		
-		//Einlesen der Proteinsequenz-FASTA Datein und ausgabe mitsammt der Metadatein als ArrayList von ArrayLists
-		for(int i = 0; i<input.size();i++){
-			String file = input.get(i);
-			FileReader fr = new FileReader(file);
-			BufferedReader br = new BufferedReader(fr);
-			String header = "";
-			String line = "";
-			String seq = "";
-			int k = 1;
-			while((line=br.readLine())!=null){
-				
-				if(k==2){
-					header = line;
-				}
-				if(line.charAt(0) == 'X'){
-					break;
-				}
-				if(line.charAt(0) != '>'){
-					seq = seq + line;
-				}
-				k+=1;
-			}
-			outputHeader.add(header);
-			outputSeq.add(seq);
-			fr.close();
-			br.close();
-		}
+		String file = "C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/aln-fasta.txt";
+		String line = "";
+		String seq = "";
 		ArrayList<ArrayList<String>> output = new ArrayList<ArrayList<String>>();
+		int k =0;
+
+
+		
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		
+		while((line=br.readLine())!=null){
+			if(line.charAt(0) == '>'){
+				outputHeader.add(line);
+			}
+		}
+		line = "";
+		br.close();
+		FileReader fr2 = new FileReader(file);
+		BufferedReader br2 = new BufferedReader(fr2);
+		while((line=br2.readLine())!=null){
+			if(line.charAt(0)!= '>'){
+				seq+=line;
+			}
+			if(line.charAt(0)== '>'){
+				if(k != 0){
+					outputSeq.add(seq);
+					seq = "";
+				}
+			}
+			k+=1;
+		}
+		br2.close();
+		outputSeq.add(seq);	
 		output.add(outputHeader);
 		output.add(outputSeq);
 		return output;
@@ -95,13 +93,14 @@ public class PhyloTree2 {
 	
 	
 	public static void buildTree() throws IOException{
-	//	ArrayList<ArrayList<String>> input = einLesen();
+		ArrayList<ArrayList<String>> input = einLesen();
 	//	Map<String,String> knoten = new HashMap<String,String>();
-		ArrayList<String> seq = new ArrayList<String>();
-		seq.add("ATTTGCGGTA");
-		seq.add("ATCTGCGATA");
-		seq.add("ATTGCCGTTT");
-		seq.add("TTCGCTGTTT");
+		ArrayList<String> seq = input.get(1);
+		ArrayList<String> header = input.get(0);
+	//	seq.add("ATTTGCGGTA");
+	//	seq.add("ATCTGCGATA");
+	//	seq.add("ATTGCCGTTT");
+	//	seq.add("TTCGCTGTTT");
 		float[][] dist = distance(seq);
 		String tree = "";
 		BufferedWriter writer = new BufferedWriter(new FileWriter("PhyloTree.tree"));
