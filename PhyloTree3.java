@@ -1,5 +1,3 @@
-package a3;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -13,7 +11,7 @@ public class PhyloTree3 {
 	public static ArrayList<ArrayList<String>> einLesen() throws IOException{
 		ArrayList<String> outputSeq = new ArrayList<String>();
 		ArrayList<String> outputHeader = new ArrayList<String>();
-		String file = "C:/Users/eitel_j1/Downloads/aln-fasta1.txt";
+		String file = "C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/aln-fasta.txt";
 		String line = "";
 		String seq = "";
 		ArrayList<ArrayList<String>> output = new ArrayList<ArrayList<String>>();
@@ -158,7 +156,7 @@ public class PhyloTree3 {
 			System.out.println(header.get(i));
 		}
 		
-		// TODO array numberOfLeaves, damit wir Distanzen korrekt berechnen können
+		// TODO array numberOfLeaves, damit wir Distanzen korrekt berechnen knnen
 		// - hat immer gleiche laenge wie header
 		
 		float[][] distMatrix = distance(seq);
