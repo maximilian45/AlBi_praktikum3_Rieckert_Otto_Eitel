@@ -1,1 +1,2 @@
-https://www.overleaf.com/14359679tdhsfzbqmprm
+Zum ausführe des Programms einfach im PhyloTree3.java den Pfad für die eingabedatei anpassen und je nach gewünschter distanzfunktion einen der befehle in der mainfkt auskommentieren.
+Dann einfach mittels Javac-Befehl kompilieren und ausführen. Die ausgabedatei dann einfach mittels Figtree darstellen.
