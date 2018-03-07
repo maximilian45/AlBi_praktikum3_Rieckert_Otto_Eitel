@@ -7,7 +7,7 @@ import java.util.*;
 
 public class PhyloTree3 {
 
-	
+	//Einlesen der Zieldatein ueber einen FileReader
 	public static ArrayList<ArrayList<String>> einLesen() throws IOException{
 		ArrayList<String> outputSeq = new ArrayList<String>();
 		ArrayList<String> outputHeader = new ArrayList<String>();
@@ -49,7 +49,7 @@ public class PhyloTree3 {
 		output.add(outputSeq);
 		return output;
 	}
-	
+	// Funktion zur Berechnung der P-Distanz
 	public static float[][] distance(ArrayList<String> sequences){
 		int k = sequences.size();
 		int l = sequences.get(0).length();
@@ -74,7 +74,7 @@ public class PhyloTree3 {
 		}		
 		return distance;
 	}
-
+    //Berechnung der paarweisen Distanzen nach Jukes-Cantor
 	public static float[][] distance2(ArrayList<String> sequences){
 		int k = sequences.size();
 		int l = sequences.get(0).length();
@@ -116,7 +116,7 @@ public class PhyloTree3 {
 		
 		return output;
 	}
-	
+	//Updaten der Distanzmatrix nach den Regeln des UPGMA
 	public static float[][] updateDistMatrix(float[][] distMatrix, int i, int j){
 		int k = distMatrix.length;
 		float[][] newMatrix = new float[k-1][k-1];
@@ -156,7 +156,7 @@ public class PhyloTree3 {
 			System.out.println(header.get(i));
 		}
 		
-		// TODO array numberOfLeaves, damit wir Distanzen korrekt berechnen knnen
+		
 		// - hat immer gleiche laenge wie header
 		
 		float[][] distMatrix = distance(seq);
@@ -167,14 +167,6 @@ public class PhyloTree3 {
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter("PhyloTree.tree"));
 
-//		Map<String,Float> kantenlngen = new HashMap<String,Float>();
-//		for(int i= 0; i< seq.size();i++){
-//			//knoten.put((input.get(0).get(i)), (input.get(1).get(i)));
-//			kantenlngen.put((seq.get(i)),(float)0.0);
-//		}
-		
-
-		
 		writer.write("#NEXUS"+"\r\n");
 		writer.write("\r\n");
 		writer.write("BEGIN TREES;\r\n");
@@ -189,9 +181,6 @@ public class PhyloTree3 {
 			float kantenlaenge = distMatrix[matrixMin1][matrixMin2]*100;
 			String neuerKnoten = "(" + header.get(matrixMin1) + ", "
 									+ header.get(matrixMin2) + "):" + kantenlaenge ;
-//			System.out.println(neuerKnoten);
-//			System.out.println("knoten1: " + header.get(matrixMin1));
-//			System.out.println("knoten2: " + header.get(matrixMin2));
 			
 			header.add(neuerKnoten);
 			header.remove(matrixMin2);
@@ -212,6 +201,8 @@ public class PhyloTree3 {
 	
 	
 	public static void main(String[] args) throws IOException{
+	    //hier je nach gewünschter Distanzfunktion den entsprechenden Befehl nutzen
+	    //1= PDistanz 2= Jukes-Cantor
 		//buildTree(1);
 		buildTree(2);
 	}
