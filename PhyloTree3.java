@@ -7,16 +7,16 @@ import java.util.*;
 
 public class PhyloTree3 {
 
-	//Einlesen der Zieldatein ueber einen FileReader
+	//Einlesen der Zieldateien ueber einen FileReader
 	public static ArrayList<ArrayList<String>> einLesen() throws IOException{
 		ArrayList<String> outputSeq = new ArrayList<String>();
 		ArrayList<String> outputHeader = new ArrayList<String>();
+		// Datei enthaelt MSA
 		String file = "C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/aln-fasta.txt";
 		String line = "";
 		String seq = "";
 		ArrayList<ArrayList<String>> output = new ArrayList<ArrayList<String>>();
 		int k =0;
-
 
 		
 		FileReader fr = new FileReader(file);
@@ -49,6 +49,7 @@ public class PhyloTree3 {
 		output.add(outputSeq);
 		return output;
 	}
+	
 	// Funktion zur Berechnung der P-Distanz
 	public static float[][] distance(ArrayList<String> sequences){
 		int k = sequences.size();
@@ -74,6 +75,8 @@ public class PhyloTree3 {
 		}		
 		return distance;
 	}
+	
+	
     //Berechnung der paarweisen Distanzen nach Jukes-Cantor
 	public static float[][] distance2(ArrayList<String> sequences){
 		int k = sequences.size();
@@ -113,9 +116,9 @@ public class PhyloTree3 {
 				}
 			}
 		}
-		
 		return output;
 	}
+	
 	//Updaten der Distanzmatrix nach den Regeln des UPGMA
 	public static float[][] updateDistMatrix(float[][] distMatrix, int i, int j){
 		int k = distMatrix.length;
@@ -135,29 +138,22 @@ public class PhyloTree3 {
 					if(m2 == (k-2)) {
 						newMatrix[m1][m2] = newMatrix[m2][m1] =
 								(float)((distMatrix[l][i] + distMatrix[l][j])/2);
-													// TODO korrekte Distanzen!
 					}
 				}
 				m1++;
 			}
 		}
-		
-		
 		return newMatrix;
 	}
 	
 	public static void buildTree(int x) throws IOException{
 		ArrayList<ArrayList<String>> input = einLesen();
-	//	Map<String,String> knoten = new HashMap<String,String>();
 		ArrayList<String> seq = input.get(1);
 		ArrayList<String> header = input.get(0);
 		
 		for(int i = 0; i < header.size(); i++) {
 			System.out.println(header.get(i));
 		}
-		
-		
-		// - hat immer gleiche laenge wie header
 		
 		float[][] distMatrix = distance(seq);
 		
@@ -177,7 +173,6 @@ public class PhyloTree3 {
 			int matrixMin1 = matrixMinima[0];
 			int matrixMin2 = matrixMinima[1];
 
-			
 			float kantenlaenge = distMatrix[matrixMin1][matrixMin2]*100;
 			String neuerKnoten = "(" + header.get(matrixMin1) + ", "
 									+ header.get(matrixMin2) + "):" + kantenlaenge ;
@@ -187,11 +182,9 @@ public class PhyloTree3 {
 			header.remove(matrixMin1);
 			
 			distMatrix = updateDistMatrix(distMatrix, matrixMin1, matrixMin2);
-						
 		}
-		
         
-		writer.write(header.get(0));
+		writer.write(header.get(0)); // Hauptteil der .tree Datei
 		writer.write("\r\n");
 		writer.write(";\r\n");
 		writer.write("END;\r\n");
@@ -199,13 +192,11 @@ public class PhyloTree3 {
 						
 	}
 	
-	
 	public static void main(String[] args) throws IOException{
-	    //hier je nach gewünschter Distanzfunktion den entsprechenden Befehl nutzen
+	    //hier je nach gewuenschter Distanzfunktion den entsprechenden Befehl nutzen
 	    //1= PDistanz 2= Jukes-Cantor
+	    // Ausgabe in PhyloTree.tree
 		//buildTree(1);
 		buildTree(2);
 	}
-	
 }
-
