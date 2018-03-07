@@ -1,13 +1,2 @@
-lalaland
-http://evolution.genetics.washington.edu/phylip/newicktree.html
-
-http://kaktus42.spline.de/material/albi/lh_algBioinf_ws02-03_phylogenetische-baeume.pdf
-
-
-https://www.cs.rit.edu/~ark/pj/lib/edu/rit/compbio/phyl/Upgma.shtml
-
-
-
-th? https://github.com/MesquiteProject/MesquiteCore/blob/master/Source/mesquite/distance/UPGMA/UPGMA.java
-
-https://www.overleaf.com/14359679tdhsfzbqmprm
+Zum ausführen des Programms einfach im PhyloTree3.java den Pfad für die Eingabedatei anpassen und je nach gewünschter Distanzfunktion einen der befehle in der main-fkt auskommentieren.
+Dann einfach mittels Javac-Befehl kompilieren und ausführen. Die Ausgabedatei dann ist einfach mittels Figtree darzustellen.
