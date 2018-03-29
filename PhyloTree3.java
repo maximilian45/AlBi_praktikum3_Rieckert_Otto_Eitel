@@ -12,7 +12,7 @@ public class PhyloTree3 {
 		ArrayList<String> outputSeq = new ArrayList<String>();
 		ArrayList<String> outputHeader = new ArrayList<String>();
 		// Datei enthaelt MSA
-		String file = "C:/Users/Acedon/Desktop/Uni/ALBI_Projekt_3/aln-fasta.txt";
+		String file = "C:/Users/feige/Desktop/praktikum3/aln-fasta.txt";
 		String line = "";
 		String seq = "";
 		ArrayList<ArrayList<String>> output = new ArrayList<ArrayList<String>>();
@@ -174,8 +174,8 @@ public class PhyloTree3 {
 			int matrixMin2 = matrixMinima[1];
 
 			float kantenlaenge = distMatrix[matrixMin1][matrixMin2]*100;
-			String neuerKnoten = "(" + header.get(matrixMin1) + ", "
-									+ header.get(matrixMin2) + "):" + kantenlaenge ;
+			String neuerKnoten = "(" + header.get(matrixMin1) + ":" + kantenlaenge + ", "
+									+ header.get(matrixMin2) + ":" + kantenlaenge + ")";
 			
 			header.add(neuerKnoten);
 			header.remove(matrixMin2);
